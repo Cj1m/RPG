@@ -38,19 +38,18 @@ public class Main extends BasicGame{
 	@Override
 	public void update(GameContainer gc, int i) throws SlickException {
 		input = gc.getInput();
-		
 			if(input.isKeyDown(Input.KEY_W)){
 				y-=0.1 * i;
-				timer(0,1,2,1,i);
+				timer(0,1,i);
 			}else if(input.isKeyDown(Input.KEY_S)){
 				y+=0.1 * i;
-				timer(0,0,2,0,i);
+				timer(0,0,i);
 			}else if(input.isKeyDown(Input.KEY_A)){
 				x-=0.1 * i;
-				timer(0,2,2,2,i);
+				timer(0,2,i);
 			}else if(input.isKeyDown(Input.KEY_D)){
 				x+=0.1 * i;
-				player = playerSprites.getSprite(0, 2).getFlippedCopy(true, false);
+				timer(0,3,i);
 			}
 	}
 
@@ -59,12 +58,12 @@ public class Main extends BasicGame{
 		player.draw(x,y);
 	}
 	
-	public void timer(int row1, int column1, int row2, int column2, int delta){
+	public void timer(int row, int column, int delta){
 		counter += delta;
 		if(counter < walkSpeed){
-			player = playerSprites.getSprite(row1, column1);
+			player = playerSprites.getSprite(row, column);
 		}else if(counter < walkSpeed * 2){
-			player = playerSprites.getSprite(row2, column2);
+			player = playerSprites.getSprite(row + 2, column);
 		}else{
 			counter = 0;
 		}
