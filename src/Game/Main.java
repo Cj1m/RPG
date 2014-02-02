@@ -38,16 +38,16 @@ public class Main extends BasicGame{
 	@Override
 	public void update(GameContainer gc, int i) throws SlickException {
 		input = gc.getInput();
-			if(input.isKeyDown(Input.KEY_W)){
+			if(input.isKeyDown(Input.KEY_W) && y>0){
 				y-=0.1 * i;
 				timer(0,1,i);
-			}else if(input.isKeyDown(Input.KEY_S)){
+			}else if(input.isKeyDown(Input.KEY_S) && y<430){
 				y+=0.1 * i;
 				timer(0,0,i);
-			}else if(input.isKeyDown(Input.KEY_A)){
+			}else if(input.isKeyDown(Input.KEY_A) && x>0){
 				x-=0.1 * i;
 				timer(0,2,i);
-			}else if(input.isKeyDown(Input.KEY_D)){
+			}else if(input.isKeyDown(Input.KEY_D) && x<600){
 				x+=0.1 * i;
 				timer(0,3,i);
 			}
