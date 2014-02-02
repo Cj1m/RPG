@@ -17,6 +17,7 @@ public class Main extends BasicGame{
 	Image player;
 	Input input;
 	int counter;
+	int walkSpeed = 250;
 	float x;
 	float y;
 	
@@ -60,9 +61,9 @@ public class Main extends BasicGame{
 	
 	public void timer(int row1, int column1, int row2, int column2, int delta){
 		counter += delta;
-		if(counter < 500){
+		if(counter < walkSpeed){
 			player = playerSprites.getSprite(row1, column1);
-		}else if(counter < 1000){
+		}else if(counter < walkSpeed * 2){
 			player = playerSprites.getSprite(row2, column2);
 		}else{
 			counter = 0;
