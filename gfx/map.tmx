@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="21" height="16" tilewidth="30" tileheight="30">
+ <tileset firstgid="1" name="DirtBlocksmall" tilewidth="30" tileheight="30">
+  <image source="DirtBlocksmall.png" width="30" height="30"/>
+  <tile id="0">
+   <properties>
+    <property name="blocked" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="21" height="16">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NkYGBgpAGmJqCHmeSaj27GUPQ7IXXEqB81k7qAFmbCzMXGJtcMSszBZz6tzKQ2BgB6quFJQAUAAA==
+  </data>
+ </layer>
+</map>
