@@ -28,9 +28,13 @@ public class Main extends BasicGame{
 	int playerWidth;
 	int playerHeight;
 	int hitBox = 24;
+	int cameraX;
+	int cameraY;
 	
 	//Map
 	TiledMap map;
+	int mapX;
+	int mapY;
 	
 	//For the timer
 	int counter;
@@ -69,6 +73,9 @@ public class Main extends BasicGame{
 		
 		x = gc.getWidth() / 3;
 		y = gc.getHeight() / 3;
+		
+		cameraX = (int) ((gc.getWidth() / 2) - (x / 2));
+		cameraY = (int) ((gc.getHeight() / 2) - (y / 2));
 		
 		//Map
 		map = new TiledMap("gfx/map.tmx");
@@ -121,8 +128,14 @@ public class Main extends BasicGame{
 	//Rendering
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException{
-		map.render(0, 0);
-		player.draw(x,y);
+		//Drawing sprites
+		map.render(0,0);
+		player.draw(x, y);
+		
+		//Drawing rectangles
+		for(int i = 0;i < rects.length;i++){
+			g.draw(rects[i]);
+		}
 		g.draw(playerBoundingRect);
 	}
 	
@@ -137,6 +150,7 @@ public class Main extends BasicGame{
 			counter = 0;
 		}
 	}
+	
 	
 	//More collision
 	private boolean isBlocked(float x, float y) {
