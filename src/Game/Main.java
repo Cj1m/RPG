@@ -27,6 +27,7 @@ public class Main extends BasicGame{
 	int walkSpeed = 250;
 	int playerWidth;
 	int playerHeight;
+	int hitBox = 24;
 	
 	//Map
 	TiledMap map;
@@ -49,6 +50,7 @@ public class Main extends BasicGame{
 	float x;
 	float y;
 	
+	
 	public Main(String gamename)
 	{
 		super(gamename);
@@ -63,7 +65,7 @@ public class Main extends BasicGame{
 		
 		playerSprites = new SpriteSheet("gfx/Sprites.png", playerWidth, playerHeight);
 		player = playerSprites.getSprite(0,0);
-		playerBoundingRect = new Rectangle(x, y, playerWidth, playerHeight);
+		playerBoundingRect = new Rectangle(x, y - playerHeight, playerWidth, hitBox);
 		
 		x = gc.getWidth() / 3;
 		y = gc.getHeight() / 3;
@@ -140,7 +142,7 @@ public class Main extends BasicGame{
 	private boolean isBlocked(float x, float y) {
         boolean blocked = false;
         
-        playerBoundingRect.setLocation(x, y);
+        playerBoundingRect.setLocation(x,y + hitBox);
 		for(int i = 0; i < rects.length; i++){
 			if(playerBoundingRect.intersects(rects[i])){
 				blocked = true;
