@@ -1,5 +1,6 @@
 package Game;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,11 +12,16 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.tiled.TiledMap;
 
 public class Main extends BasicGame{
+	 //General
+	static int FPS = 60;
+	
 	//Player
 	SpriteSheet playerSprites;
+	Rectangle playerBoundingRect;
 	Image player;
 	Input input;
 	int walkSpeed = 250;
@@ -35,7 +41,9 @@ public class Main extends BasicGame{
 	int screenBottomEdge = 430;
 	
 	//Collision
-	boolean[][] blocked;
+	ArrayList<Rectangle> rectList;
+	Rectangle[] rects;
+	int blockSize = 30;
 	
 	//Player position 
 	float x;
@@ -55,6 +63,7 @@ public class Main extends BasicGame{
 		
 		playerSprites = new SpriteSheet("gfx/Sprites.png", playerWidth, playerHeight);
 		player = playerSprites.getSprite(0,0);
+		playerBoundingRect = new Rectangle(x, y, playerWidth, playerHeight);
 		
 		x = gc.getWidth() / 3;
 		y = gc.getHeight() / 3;
@@ -63,18 +72,20 @@ public class Main extends BasicGame{
 		map = new TiledMap("gfx/map.tmx");
 		
 		//Collision code from thejavablog.wordpress.com	
-		blocked = new boolean[map.getWidth()][map.getHeight()];
+		rectList = new ArrayList<Rectangle>();
 		
 		for (int xAxis=0;xAxis<map.getWidth(); xAxis++){
              for (int yAxis=0;yAxis<map.getHeight(); yAxis++){
                  int tileID = map.getTileId(xAxis, yAxis, 0);
                  String value = map.getTileProperty(tileID, "blocked", "false");
-                 System.out.println(value);
                  if (value.equals("true")){
-                     blocked[xAxis][yAxis] = true;
+                     rectList.add(new Rectangle(xAxis * blockSize, yAxis * blockSize,blockSize,blockSize));
                  }
              }
          }
+		rects = new Rectangle[rectList.size()];
+		rects = rectList.toArray(rects);
+		
 	}
 
 	//Updating
@@ -87,7 +98,7 @@ public class Main extends BasicGame{
 					timer(0,1,delta);
 				}
 			}else if(input.isKeyDown(Input.KEY_S) && y < screenBottomEdge){
-				if (!isBlocked(x, y + playerHeight + delta * 0.1f)){
+				if (!isBlocked(x, y + delta * 0.1f)){
 					y+=0.1 * delta;
 					timer(0,0,delta);
 				}
@@ -97,7 +108,7 @@ public class Main extends BasicGame{
 					timer(0,2,delta);
 				}
 			}else if(input.isKeyDown(Input.KEY_D) && x < screenRightEdge){
-				if (!isBlocked(x + playerWidth + delta * 0.1f, y)){
+				if (!isBlocked(x + delta * 0.1f, y)){
 					x+=0.1 * delta;
 					timer(0,3,delta);
 				}
@@ -109,8 +120,8 @@ public class Main extends BasicGame{
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException{
 		map.render(0, 0);
-		
 		player.draw(x,y);
+		g.draw(playerBoundingRect);
 	}
 	
 	//Custom timer
@@ -127,9 +138,15 @@ public class Main extends BasicGame{
 	
 	//More collision
 	private boolean isBlocked(float x, float y) {
-        int xBlock = (int)x / 30;
-        int yBlock = (int)y / 30;
-        return blocked[xBlock][yBlock];
+        boolean blocked = false;
+        
+        playerBoundingRect.setLocation(x, y);
+		for(int i = 0; i < rects.length; i++){
+			if(playerBoundingRect.intersects(rects[i])){
+				blocked = true;
+			}
+		}
+		return blocked;
     }
 	
 	//Running the game.
@@ -140,7 +157,7 @@ public class Main extends BasicGame{
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new Main("RPG Game"));
 			appgc.setDisplayMode(640, 480, false);
-			appgc.setTargetFrameRate(60); 
+			appgc.setTargetFrameRate(FPS); 
 			appgc.start();
 		}
 		catch (SlickException ex)
