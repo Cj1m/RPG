@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="21" height="16" tilewidth="30" tileheight="30">
- <tileset firstgid="1" name="DirtBlocksmall" tilewidth="30" tileheight="30">
-  <image source="DirtBlocksmall.png" width="30" height="30"/>
+<map version="1.0" orientation="orthogonal" width="40" height="30" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="Stone" tilewidth="32" tileheight="32">
+  <image source="Brick.png" width="32" height="32"/>
   <tile id="0">
    <properties>
     <property name="blocked" value="true"/>
    </properties>
   </tile>
  </tileset>
- <layer name="Tile Layer 1" width="21" height="16">
+ <tileset firstgid="2" name="Grass" tilewidth="32" tileheight="32">
+  <image source="Grass.png" width="32" height="32"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="40" height="30">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NkYGBgpAGmJqCHmeSaj27GUPQ7IXXEqB81k7qAFmbCzMXGJtcMSszBZz6tzKQ2BgB6quFJQAUAAA==
+   H4sIAAAAAAAAC+2UuxaAMAhDqf//0e6e0pKHlsGBRSO9JcEREaN5XZvqznea9wqeFeVm+mTPVnqW9Qu+mc6ZMxef4i/Kh86dyV/FRxefuksI3+wdmj/HrjN8Fc/U3FXmofAhjG4+NveMr2/xVXOIfIvwsedU7oXOb+cP0sPJl2X9yYuci/IpOhff7P5OPpZR2Z/qjNj8V/hcOVD+i1m+mV13MJ7iW3mN5gz1mtU6zhsFPZoxdv6Z3rXLXfjYUvt25kM9+yuvG0wKvrrAEgAA
   </data>
  </layer>
 </map>

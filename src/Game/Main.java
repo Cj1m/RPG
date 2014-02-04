@@ -48,7 +48,7 @@ public class Main extends BasicGame{
 	//Collision
 	ArrayList<Rectangle> rectList;
 	Rectangle[] rects;
-	int blockSize = 30;
+	int blockSize = 32;
 	
 	//Player position 
 	float x;
@@ -69,7 +69,7 @@ public class Main extends BasicGame{
 		
 		playerSprites = new SpriteSheet("gfx/Sprites.png", playerWidth, playerHeight);
 		player = playerSprites.getSprite(0,0);
-		playerBoundingRect = new Rectangle(x, y - playerHeight, playerWidth, hitBox);
+		playerBoundingRect = new Rectangle(x, y - playerHeight, playerWidth - 2, hitBox);
 		
 		x = gc.getWidth() / 3;
 		y = gc.getHeight() / 3;
