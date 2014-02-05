@@ -18,6 +18,8 @@ import org.newdawn.slick.tiled.TiledMap;
 public class Main extends BasicGame{
 	 //General
 	static int FPS = 60;
+	int SCREENCENTERX;
+	int SCREENCENTERY;
 	
 	//Player
 	SpriteSheet playerSprites;
@@ -28,31 +30,19 @@ public class Main extends BasicGame{
 	int playerWidth;
 	int playerHeight;
 	int hitBox = 24;
-	int cameraX;
-	int cameraY;
 	
 	//Map
 	TiledMap map;
-	int mapX;
-	int mapY;
+	float mapX,mapY;
 	
-	//For the timer
+	
+	//For the timer 
 	int counter;
-	
-	//Temporary boundary control
-	int screenRightEdge = 600;
-	int screenLeftEdge = 0;
-	int screenTopEdge = 0;
-	int screenBottomEdge = 430;
 	
 	//Collision
 	ArrayList<Rectangle> rectList;
 	Rectangle[] rects;
 	int blockSize = 32;
-	
-	//Player position 
-	float x;
-	float y;
 	
 	
 	public Main(String gamename)
@@ -63,37 +53,25 @@ public class Main extends BasicGame{
 	//On startup method
 	@Override
 	public void init(GameContainer gc) throws SlickException {
+		//General
+		SCREENCENTERX = gc.getWidth() / 2;
+		SCREENCENTERY = gc.getHeight() / 2;
+		
 		//Player
-		playerWidth = 32;
-		playerHeight = 48;
+		playerWidth = 20;
+		playerHeight = 40;
 		
-		playerSprites = new SpriteSheet("gfx/Sprites.png", playerWidth, playerHeight);
+		playerSprites = new SpriteSheet("gfx/Sprites.png", 32, 48);
 		player = playerSprites.getSprite(0,0);
-		playerBoundingRect = new Rectangle(x, y - playerHeight, playerWidth - 2, hitBox);
+		playerBoundingRect = new Rectangle(SCREENCENTERX - playerWidth, SCREENCENTERY - playerHeight, playerWidth, hitBox);
 		
-		x = gc.getWidth() / 3;
-		y = gc.getHeight() / 3;
+		mapX = 0;
+		mapY = 0;
 		
-		cameraX = (int) ((gc.getWidth() / 2) - (x / 2));
-		cameraY = (int) ((gc.getHeight() / 2) - (y / 2));
+		
 		
 		//Map
-		map = new TiledMap("gfx/map.tmx");
-		
-		//Collision code from thejavablog.wordpress.com	
-		rectList = new ArrayList<Rectangle>();
-		
-		for (int xAxis=0;xAxis<map.getWidth(); xAxis++){
-             for (int yAxis=0;yAxis<map.getHeight(); yAxis++){
-                 int tileID = map.getTileId(xAxis, yAxis, 0);
-                 String value = map.getTileProperty(tileID, "blocked", "false");
-                 if (value.equals("true")){
-                     rectList.add(new Rectangle(xAxis * blockSize, yAxis * blockSize,blockSize,blockSize));
-                 }
-             }
-         }
-		rects = new Rectangle[rectList.size()];
-		rects = rectList.toArray(rects);
+		getBlocks();
 		
 	}
 
@@ -102,26 +80,28 @@ public class Main extends BasicGame{
 	public void update(GameContainer gc, int delta) throws SlickException {
 		input = gc.getInput();
 			if(input.isKeyDown(Input.KEY_W)){
-				if(!isBlocked(x, y - delta * 0.1f)){
-					y-=0.1 * delta;
+				if(!isBlocked(SCREENCENTERX, SCREENCENTERY - delta * 0.1f)){
+					mapY-=0.1 * delta;
 					timer(0,1,delta);
 				}
-			}else if(input.isKeyDown(Input.KEY_S) && y < screenBottomEdge){
-				if (!isBlocked(x, y + delta * 0.1f)){
-					y+=0.1 * delta;
+			}else if(input.isKeyDown(Input.KEY_S)){
+				if (!isBlocked(SCREENCENTERX, SCREENCENTERY + delta * 0.1f)){
+					mapY+=0.1 * delta;
 					timer(0,0,delta);
 				}
-			}else if(input.isKeyDown(Input.KEY_A) && x > screenLeftEdge){
-				if (!isBlocked(x - delta * 0.1f, y)){
-					x-=0.1 * delta;
+			}else if(input.isKeyDown(Input.KEY_A)){
+				if (!isBlocked(SCREENCENTERX - delta * 0.1f, SCREENCENTERY)){
+					mapX-=0.1 * delta;
 					timer(0,2,delta);
 				}
-			}else if(input.isKeyDown(Input.KEY_D) && x < screenRightEdge){
-				if (!isBlocked(x + delta * 0.1f, y)){
-					x+=0.1 * delta;
+			}else if(input.isKeyDown(Input.KEY_D)){
+				if (!isBlocked(SCREENCENTERX + delta * 0.1f, SCREENCENTERY)){
+					mapX+=0.1 * delta;
 					timer(0,3,delta);
 				}
 			}
+			
+			getBlocks();
 	}
 
 	
@@ -129,15 +109,10 @@ public class Main extends BasicGame{
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException{
 		//Drawing sprites
-		map.render(0,0);
-		player.draw(x, y);
-		
-		//Drawing rectangles
-		for(int i = 0;i < rects.length;i++){
-			g.draw(rects[i]);
-		}
-		g.draw(playerBoundingRect);
+		map.render((int)-mapX,(int)-mapY);
+		player.draw(SCREENCENTERX, SCREENCENTERY);
 	}
+	
 	
 	//Custom timer
 	public void timer(int row, int column, int delta){
@@ -152,11 +127,32 @@ public class Main extends BasicGame{
 	}
 	
 	
+	public void getBlocks(){
+		try {
+			map = new TiledMap("gfx/map.tmx");
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+		rectList = new ArrayList<Rectangle>();
+		
+		for (int xAxis=0;xAxis<map.getWidth(); xAxis++){
+             for (int yAxis=0;yAxis<map.getHeight(); yAxis++){
+                 int tileID = map.getTileId(xAxis, yAxis, 0);
+                 String value = map.getTileProperty(tileID, "blocked", "false");
+                 if (value.equals("true")){
+                     rectList.add(new Rectangle(xAxis * blockSize - mapX, yAxis * blockSize - mapY,blockSize,blockSize));
+                 }
+             }
+         }
+		rects = new Rectangle[rectList.size()];
+		rects = rectList.toArray(rects);
+	}
+	
 	//More collision
 	private boolean isBlocked(float x, float y) {
         boolean blocked = false;
         
-        playerBoundingRect.setLocation(x,y + hitBox);
+        playerBoundingRect.setLocation(x + (playerWidth - 8) / 2,y + hitBox - 2);
 		for(int i = 0; i < rects.length; i++){
 			if(playerBoundingRect.intersects(rects[i])){
 				blocked = true;
