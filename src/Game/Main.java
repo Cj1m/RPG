@@ -31,6 +31,9 @@ public class Main extends BasicGame{
 	int playerHeight;
 	int hitBox = 24;
 	
+	//Enemy
+	Enemy bob;
+	
 	//Map
 	TiledMap map;
 	float mapX,mapY;
@@ -65,14 +68,17 @@ public class Main extends BasicGame{
 		player = playerSprites.getSprite(0,0);
 		playerBoundingRect = new Rectangle(SCREENCENTERX - playerWidth, SCREENCENTERY - playerHeight, playerWidth, hitBox);
 		
-		mapX = 0;
-		mapY = 0;
+		
+		mapX = -150;
+		mapY = -50;
 		
 		
 		
 		//Map
 		getBlocks();
 		
+		//Enemy
+		bob = new Enemy(00, 50, 70, rects);
 	}
 
 	//Updating
@@ -100,7 +106,7 @@ public class Main extends BasicGame{
 					timer(0,3,delta);
 				}
 			}
-			
+			bob.move(delta, mapX, mapY);
 			getBlocks();
 	}
 
@@ -108,8 +114,13 @@ public class Main extends BasicGame{
 	//Rendering
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException{
-		//Drawing sprites
+		//Map
 		map.render((int)-mapX,(int)-mapY);
+		
+		//Enemy(s)
+		bob.render(g, rects);
+		
+		//Player
 		player.draw(SCREENCENTERX, SCREENCENTERY);
 	}
 	
@@ -168,7 +179,7 @@ public class Main extends BasicGame{
 		{
 			AppGameContainer appgc;
 			appgc = new AppGameContainer(new Main("RPG Game"));
-			appgc.setDisplayMode(640, 480, false);
+			appgc.setDisplayMode(800, 600, false);
 			appgc.setTargetFrameRate(FPS); 
 			appgc.start();
 		}
