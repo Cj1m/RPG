@@ -16,7 +16,9 @@ public class Enemy {
 	float speed;
 	
 	boolean moveLeft = false;
-	boolean moveRight = true;
+	boolean moveRight = false;
+	boolean moveDown = true;
+	boolean moveUp = false;
 	
 	Rectangle enemyBoundingRect;
 	Rectangle[] rects;
@@ -42,22 +44,39 @@ public class Enemy {
 		g.draw(enemyBoundingRect);
 	}
 	
-	public void move(int delta, float mapX, float mapY){
-		if(moveLeft){
-			x -= speed;
-		}
-		if(moveRight){
-			x += speed;
-		}
+	public void move(float mapX, float mapY){
+		if(moveLeft) x -= speed;
+		if(moveRight)x += speed;
+		if(moveDown)y += speed;
+		if(moveUp)y -= speed;
+		
+		
 		
 		if(isBlocked(x - mapX - speed, y - mapY) && !isBlocked(x - mapX + speed, y - mapY)){
 			moveRight = true;
 			moveLeft = false;
+			moveDown = false;
+			moveUp = false;
+		}
+		if(!isBlocked(x - mapX, y - mapY + speed) && isBlocked(x - mapX, y - mapY - speed)){
+			moveLeft = false;
+			moveRight = false;
+			moveDown = true;
+			moveUp = false;
 		}
 		if(!isBlocked(x - mapX - speed, y - mapY) && isBlocked(x - mapX + speed, y - mapY)){
 			moveLeft = true;
 			moveRight = false;
+			moveDown = false;
+			moveUp = false;
 		}
+		if(!isBlocked(x - mapX, y - mapY - speed) && isBlocked(x - mapX, y - mapY + speed)){
+			moveLeft = false;
+			moveRight = false;
+			moveDown = false;
+			moveUp = true;
+		}
+	
 	}
 	
 	private boolean isBlocked(float x, float y){

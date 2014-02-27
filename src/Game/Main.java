@@ -6,12 +6,14 @@ import java.util.logging.Logger;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.tiled.TiledMap;
 
@@ -30,6 +32,7 @@ public class Main extends BasicGame{
 	int playerWidth;
 	int playerHeight;
 	int hitBox = 24;
+	float health;
 	
 	//Enemy
 	Enemy bob;
@@ -68,6 +71,7 @@ public class Main extends BasicGame{
 		player = playerSprites.getSprite(0,0);
 		playerBoundingRect = new Rectangle(SCREENCENTERX - playerWidth, SCREENCENTERY - playerHeight, playerWidth, hitBox);
 		
+		health = 100;
 		
 		mapX = -150;
 		mapY = -50;
@@ -78,7 +82,7 @@ public class Main extends BasicGame{
 		getBlocks();
 		
 		//Enemy
-		bob = new Enemy(00, 50, 70, rects);
+		bob = new Enemy(00, 200, 70, rects);
 	}
 
 	//Updating
@@ -106,7 +110,11 @@ public class Main extends BasicGame{
 					timer(0,3,delta);
 				}
 			}
-			bob.move(delta, mapX, mapY);
+			bob.move(mapX, mapY);
+			
+			if(playerBoundingRect.intersects(bob.enemyBoundingRect)){
+				health -= 0.1f;
+			}
 			getBlocks();
 	}
 
@@ -122,6 +130,7 @@ public class Main extends BasicGame{
 		
 		//Player
 		player.draw(SCREENCENTERX, SCREENCENTERY);
+		g.drawString("Health: "+ Math.round(health), 10, 30);
 	}
 	
 	
