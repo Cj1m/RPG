@@ -1,7 +1,7 @@
 RPG
 ===
 
-Java RPG Game
+##Java RPG Game
 
 This is a first attempt at a 2D top-down Java game.
 I am no longer working on this project as it was just a prototype.
